@@ -11,28 +11,15 @@
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-// Route::middleware('auth:api')->get('/view', function (Request $request) {
-//     return $request->view();
-// });
+/**
+ * Patient routes
+ */
+Route::get('/patient/{id}', 'Api\PatientsController@getPatientInfo');
+Route::post('/patient/{id}/edit', 'Api\PatientsController@updatePatientInfo');
+Route::post('/patient/{id}/doctor', 'Api\PatientsController@getDoctorInfo');
+Route::get('/patient/{id}/clinic', 'Api\PatientsController@getClinicInfo');
 
 /**
- * Doctor routes
+ *
  */
-Route::get('/doctor', 'Api\UsersController@getProfile');
-Route::get('/doctor/{id}', 'Api\UsersController@getProfile');
-Route::post('/doctor/create', 'Api\UsersController@createProfile');
-Route::post('/doctor/edit/{id}', 'Api\UsersController@updateProfile');
-Route::post('/doctor/{id}/pationts', 'Api\UsersController@syncPationts');
-
-//#2
-Route::post('/patient/edit/{id}', 'Api\PatientsController@updatePatientProfile');
-
-//#3
-Route::get('/patient/showReview/{id}', 'Api\PatVisitingsController@getReviewTime');
-
-// Route::get('/login', 'Api\UsersController@login');
-// Route::post('/register', 'Api\UsersController@register');
+Route::get('/patient/{id}/reviews', 'Api\PatientsController@getTimeReviews');

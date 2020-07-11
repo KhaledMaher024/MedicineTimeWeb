@@ -2,21 +2,58 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Http\Request;
+use App\Doctor;
+use Illuminate\Http\JsonResponse;
 use App\Patient;
 use App\Http\Requests\PatientRequest;
-// use App\Http\Controllers\Auth\RegisterController;
 
-class PatientsController extends BaseController {
+class PatientsController extends ApiController {
 
-    public function updatePatientProfile(PatientRequest $request, $id) {
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getPatientInfo($id) {
+        $patient = Patient::find($id);
+        if ($patient) return $this->response('Found data', 200, $patient);
+        else return $this->response('Not found', 404);
+    }
+
+    public function updatePatientInfo(PatientRequest $request, $id) {
         $data = $request->validated();
         $patient = Patient::findOrFail($id)->update($data);
-        return response()->json([
-            'data' => $patient,
-            'status' => true,
-        ], 200);
+        if ($patient) return $this->response('Found data', 200, $patient);
+        else return $this->response('Not found', 404);
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getDoctorInfo($id) {
+        $doctor = Doctor::find($id);
+        if ($doctor) return $this->response('Found data', 200, $doctor);
+        else return $this->response('Not found', 404);
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getClinicInfo($id) {
+        $patient = Patient::with('doctorPatient.doctor.clinic')->find($id);
+        if ($patient) return $this->response('Found data', 200, $patient);
+        else return $this->response('Not found', 404);
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getTimeReviews($id) {
+        $patient = Patient::with('doctorPatient.doctor.clinic')->find($id);
+        if ($patient) return $this->response('Found data', 200, $patient);
+        else return $this->response('Not found', 404);
     }
 
 }

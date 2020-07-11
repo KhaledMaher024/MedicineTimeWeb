@@ -4,9 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Patient extends Model
+class DoctorPatient extends Model
 {
 
     /**
@@ -14,7 +13,7 @@ class Patient extends Model
     *
     * @var string
     */
-   protected $table = 'patients';
+   protected $table = 'doctor_patients';
 
    /**
     * The attributes that are mass assignable.
@@ -22,7 +21,7 @@ class Patient extends Model
     * @var array
     */
     protected $fillable = [
-        'identity_num', 'gender', 'name', 'birthday', 'mobile', 'address',
+        'doctor_id', 'patient_id'
     ];
 
     /**
@@ -47,22 +46,17 @@ class Patient extends Model
     protected $casts = [];
 
     /**
-     * Perform any actions required before the model boots.
-     *
-     * @return void
+     * @return belongsTo
      */
-    protected static function booting()
-    {
-        static::saving(function($patient) {
-            $patient->password = \bcrypt($patient->password);
-        });
+    public function doctor() {
+        return $this->belongsTo(Doctor::class);
     }
 
     /**
-     * @return HasOne
+     * @return belongsTo
      */
-    public function doctorPatient() {
-        return $this->hasOne(DoctorPatient::class);
+    public function patient() {
+        return $this->belongsTo(Patient::class);
     }
 
 }

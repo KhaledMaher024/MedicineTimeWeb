@@ -2,44 +2,67 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Doctor extends Model
 {
 
-   /**
-    * The table associated with the model.
-    *
-    * @var string
-    */
-   protected $table = 'doctors';
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'doctors';
 
-   /**
-    * The attributes that are mass assignable.
-    *
-    * @var array
-    */
-   protected $fillable = [
-      'identity_num', 'type', 'name', 'username', 'password', 'clinic_id',
-   ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'identity_num', 'type', 'name', 'username', 'password', 'clinic_id',
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-   protected $hidden = [
-      'password',
-   ];
+    protected $hidden = [
+        'password',
+    ];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-   protected $casts = [
-   ];
+    protected $casts = [];
 
-   public function clinic() {
-      return $this->belongsTo(Clinic::class);
-   }
+    /**
+     * Perform any actions required before the model boots.
+     *
+     * @return void
+     */
+    protected static function booting()
+    {
+        static::saving(function($patient) {
+            $patient->password = \bcrypt($patient->password);
+        });
+    }
+
+    public function clinic()
+    {
+        return $this->belongsTo(Clinic::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function patients()
+    {
+        return $this->hasMany(DoctorPatient::class);
+    }
 
 }

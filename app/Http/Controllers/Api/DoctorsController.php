@@ -2,76 +2,56 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Http\Request;
-use App\User;
-use App\Http\Requests\UserRequest;
+use App\Doctor;
+use App\Http\Requests\Doctor\DoctorRequest;
+use App\Http\Requests\Doctor\SyncPatientsRequest;
+use Illuminate\Http\JsonResponse;
 
-class DoctorsController extends BaseController {
+class DoctorsController extends ApiController {
 
-    // public function generateToken(){
-    //     $this->api_token = str_random(60);
-    //     $this->save();
-    //     return $this->api_token;
-    // }
-
-    // protected function registered(Request $request, $user) {
-    //     $user->generateToken();
-    //     return response()->json(['data' => $user->toArray()], 201);
-    // }
-
-    // public function register(Request $request) {
-    //     $this->validator($request->all())->validate();
-    //     event(new Registered($user = $this->create($request->all())));
-    //     $this->guard()->login($user);
-    //     return $this->registered($request, $user) ?: redirect($this->redirectPath());
-    // }
-
-
-    
-    // public function login(LoginRequest $request) {
-    //     $userId = 1;//;auth()->user()->id;
-    //     $user = User::findOrFail($userId);
-    //     return response()->json([
-    //         'data' => $user,
-    //         'status' => true,
-    //     ], 200);
-    // }
-
-
-
-
-
-
-
-
-
-
-
-    public function getProfile() {
-        $userId = 1;//;auth()->user()->id;
-        $user = User::findOrFail($userId);
-        return response()->json([
-            'data' => $user,
-            'status' => true,
-        ], 200);
+    /**
+     * @return JsonResponse
+     */
+    public function getMyInfo() {
+        $doctor = Doctor::find(1);
+        if ($doctor) return $this->response('Found data', 200, $doctor);
+        else return $this->response('Not found', 404);
     }
 
-    public function createProfile(UserRequest $request) {
+    /**
+     * @param DoctorRequest $request
+     * @return JsonResponse
+     */
+    public function createDoctor(DoctorRequest $request) {
         $data = $request->validated();
-        $user = User::create($data);
-        return response()->json([
-            'data' => $user,
-            'status' => true,
-        ], 201);
+        $doctor = Doctor::create($data);
+        if ($doctor) return $this->response('Created successfully', 201, $doctor);
+        else return $this->response('Something bad', 400);
     }
 
-    public function updateProfile(UserRequest $request, $id) {
+    /**
+     * @param DoctorRequest $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function updateProfile(DoctorRequest $request, $id) {
         $data = $request->validated();
-        $user = User::findOrFail($id)->update($data);
-        return response()->json([
-            'data' => $user,
-            'status' => true,
-        ], 200);
+        $doctor = Doctor::find($id);
+        if (!$doctor) $this->response('Not found', 404);
+        $updateStatus = $doctor->update($data);
+        if ($updateStatus) return $this->response('Created successfully', 200);
+        else return $this->response('Something bad', 400);
+    }
+
+    /**
+     * @param SyncPatientsRequest $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function syncPatients(SyncPatientsRequest $request, $id) {
+        $data = $request->validated();
+        $doctor = Doctor::find($id)->sync($data['patient_ids']);
+        if ($doctor) return $this->response('Synced successfully', 200, $doctor);
+        else return $this->response('Something bad', 400);
     }
 }
