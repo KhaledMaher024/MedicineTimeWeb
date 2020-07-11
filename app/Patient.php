@@ -2,12 +2,14 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
-class Patient extends Model
+class Patient extends Authenticatable
 {
+    use HasApiTokens, Notifiable;
 
     /**
     * The table associated with the model.
@@ -16,7 +18,7 @@ class Patient extends Model
     */
    protected $table = 'patients';
 
-   /**
+    /**
     * The attributes that are mass assignable.
     *
     * @var array

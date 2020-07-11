@@ -10,10 +10,11 @@ use Illuminate\Http\JsonResponse;
 class DoctorsController extends ApiController {
 
     /**
+     * @param $id
      * @return JsonResponse
      */
-    public function getMyInfo() {
-        $doctor = Doctor::find(1);
+    public function getDoctorInfo($id) {
+        $doctor = Doctor::find($id);
         if ($doctor) return $this->response('Found data', 200, $doctor);
         else return $this->response('Not found', 404);
     }
