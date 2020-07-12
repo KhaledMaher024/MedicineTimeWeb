@@ -14,12 +14,23 @@
 Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['auth:api', 'cors', 'json.response']], function () {
 
     /**
-     * Patient routes
+     * after auth routes
      */
-    Route::get('/patient/{id}', 'PatientsController@getPatientInfo');
-    Route::post('/patient/{id}/edit', 'PatientsController@updatePatientInfo');
-    Route::post('/patient/{id}/doctor', 'DoctorsController@getDoctorInfo');
-    Route::get('/patient/{id}/clinic', 'ClinicsController@getClinicInfo');
-    Route::get('/patient/{id}/reviews', 'PatientVisitsController@getReviewTime');
+    Route::get('/patient', 'PatientsController@getPatientInfo');
+    Route::post('/patient/update', 'PatientsController@updatePatientInfo');
+    Route::get('/patient/doctor', 'PatientsController@getDoctorInfo');
+    Route::get('/patient/clinic', 'PatientsController@getClinicInfo');
+    Route::get('/patient/reviews', 'PatientVisitsController@getReviewTime');
+
+});
+
+Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['cors', 'json.response']], function () {
+
+    /**
+     * before auth routes
+     */
+    Route::post('/patient/register', 'AuthController@postRegister');
+    Route::post('/patient/login', 'AuthController@postLogin');
+    Route::get('/patient/logout', 'AuthController@getLogout');
 
 });

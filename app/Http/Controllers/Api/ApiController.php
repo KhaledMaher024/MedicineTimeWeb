@@ -10,12 +10,13 @@ use App\Http\Requests\UserRequest;
 class ApiController extends BaseController {
 
     public function response($message, $statusCode, $model = null) {
-        return response()->json([
+        $data = [
             'status' => in_array($statusCode, [200, 201]),
             'message' => $message,
             'status_code' => $statusCode,
-            'data' => $model,
-        ], $statusCode);
+        ];
+        if (!is_null($model)) $data['data'] = $model;
+        return response()->json($data, $statusCode);
     }
 
 }

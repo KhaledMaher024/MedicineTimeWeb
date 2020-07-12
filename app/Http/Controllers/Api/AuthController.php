@@ -2,31 +2,67 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Patient;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
-class AuthController extends Controller
+use App\Http\Requests\Patient\RegisterPatientRequest;
+use App\Http\Requests\Login\LoginRequest;
+use App\Patient;
+
+class AuthController extends ApiController
 {
 
-    public function register (Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-        if ($validator->fails())
-        {
-            return response(['errors'=>$validator->errors()->all()], 422);
-        }
-        $request['password'] = Hash::make($request['password']);
-        $request['remember_token'] = Str::random(10);
-        $user = Patient::create($request->toArray());
-        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-        $response = ['token' => $token];
-        return response($response, 200);
+    /**
+     * @param RegisterPatientRequest $request
+     * @return JsonResponse
+     */
+    public function postRegister(RegisterPatientRequest $request)
+    {
+        $data = $request->validated();
+        $patient = Patient::create($data);
+        if ($patient) return $this->response('Your account has been created successfully', 201, $patient);
+        else return $this->response('Something went wrong', 400);
     }
 
+    /**
+     * @param LoginRequest $request
+     * @return JsonResponse
+     */
+    public function postLogin(LoginRequest $request)
+    {
+        $data = $request->validated();
+        $patient = Patient::where('identity_num', $data['identity_num'])->first();
+        if (!$patient)
+        {
+            return $this->response('Something went wrong', 404);
+        }
+
+        $password = $patient->password;
+        if (!Hash::check($data['password'], $password))
+        {
+            return $this->response('Patient credentials were incorrect', 400);
+        }
+
+        $token = $patient->createToken('android');
+        $patient->token = ['access_token' => $token->accessToken, 'token_type' => 'Bearer'];
+
+        return $this->response('You have been logged in successfully', 200, $patient);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getLogout(Request $request)
+    {
+        $patientId = $request->user()->id;
+        $patient = Patient::find($patientId);
+        if (!$patient) {
+            return $this->response('No data found', 404);
+        }
+        $request->user()->token()->revoke();
+        return $this->response('You have been logout successfully', 200);
+    }
 
 }

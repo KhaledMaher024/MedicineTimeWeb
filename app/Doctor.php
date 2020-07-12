@@ -48,7 +48,7 @@ class Doctor extends Model
     protected static function booting()
     {
         static::saving(function($patient) {
-            $patient->password = \bcrypt($patient->password);
+            $patient->password = bcrypt($patient->password);
         });
     }
 

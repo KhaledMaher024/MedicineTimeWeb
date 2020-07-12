@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Login;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,9 +23,8 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        $id = request()->get('id') ?? 0;
         return [
-            'identity_num' => 'required|numeric|digits:9|unique:users,identity_num,'.$id.',id',
+            'identity_num' => 'required|numeric|digits:9',
             'password' => 'required|min:6',
         ];
     }
