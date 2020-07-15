@@ -67,4 +67,13 @@ class Patient extends Authenticatable
         return $this->belongsToMany(Drug::class)->withPivot('dose', 'number_of_usage', 'notes')->as('drug_info');
     }
 
+    public function patient_Drug() {
+        return $this->belongsTo(PatientDrug::class);
+    }
+
+    public function patient_drug_history() {
+        return $this->belongsTo(PatientDrugTime::class);
+    }
+    
+
 }

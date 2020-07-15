@@ -25,6 +25,10 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['auth:api
     Route::post('/patient/update/info', 'PatientsController@updatePatientInfo');
     Route::get('/patient/logout', 'PatientsController@getLogout');
 
+    //*here*//
+    Route::get('/patient/drugs', 'PatientController@getDrugsList');
+    Route::get('/patient/drugsTime', 'PatientController@getDrugsHistory');
+
 });
 
 Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['cors', 'json.response']], function () {
