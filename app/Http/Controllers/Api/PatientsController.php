@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Patient\ChangePasswordRequest;
 use Illuminate\Http\JsonResponse;
 
 use App\Http\Requests\Patient\UpdatePatientRequest;
-use App\Patient;
+use Illuminate\Support\Facades\Hash;
 
-class PatientsController extends ApiController {
+class PatientsController extends ApiController
+{
 
     /**
      * @return JsonResponse
      */
-    public function getPatientInfo() {
-        $patientId = auth()->guard('api')->user()->id;
-        $patient = Patient::find($patientId);
+    public function getPatientInfo()
+    {
+        $patient = auth()->guard('api')->user()->with(['doctors.clinic', 'drugs'])->get();
         if ($patient) return $this->response('Found data', 200, $patient);
         else return $this->response('Data not found', 404);
     }
@@ -23,10 +25,10 @@ class PatientsController extends ApiController {
      * @param UpdatePatientRequest $request
      * @return JsonResponse
      */
-    public function updatePatientInfo(UpdatePatientRequest $request) {
+    public function updatePatientInfo(UpdatePatientRequest $request)
+    {
         $data = $request->validated();
-        $patientId = auth()->guard('api')->user()->id;
-        $patient = Patient::find($patientId);
+        $patient = auth()->guard('api')->user();
         if (!$patient) return $this->response('Data not found', 404);
         $patientStatus = $patient->update($data);
         if ($patientStatus) return $this->response('Patient info updated', 200);
@@ -36,30 +38,40 @@ class PatientsController extends ApiController {
     /**
      * @return JsonResponse
      */
-    public function getDoctorInfo() {
-        $doctor = auth()->guard('api')->user()->doctorPatient();
-        if ($doctor) return $this->response('Found data', 200, $doctor);
-        else return $this->response('Data not found', 404);
+    public function getDrugsDose()
+    {
+        // TODO implement drug dose list for the patient
     }
 
     /**
      * @return JsonResponse
      */
-    public function getClinicInfo() {
-        $patientId = auth()->guard('api')->user()->id;
-        $patient = Patient::with('doctorPatient.doctor.clinic')->find($patientId);
-        if ($patient) return $this->response('Found data', 200, $patient);
-        else return $this->response('Data not found', 404);
+    public function getLogout()
+    {
+        $patient = auth()->guard('api')->user();
+        if (!$patient) {
+            return $this->response('No data found', 404);
+        }
+        $patient->token()->revoke();
+        return $this->response('You have been logout successfully', 200);
     }
 
     /**
+     * @param ChangePasswordRequest $request
      * @return JsonResponse
      */
-    public function getTimeReviews() {
-        $patientId = auth()->guard('api')->user()->id;
-        $patient = Patient::with('doctorPatient.doctor.clinic')->find($patientId);
-        if ($patient) return $this->response('Found data', 200, $patient);
-        else return $this->response('Data not found', 404);
+    public function updatePatientPassword(ChangePasswordRequest $request)
+    {
+        // TODO implement this function to update the password for the patient
+    }
+
+    public function postForgotPassword() {
+        // TODO implement this function to sent an email with a new password
+
+    }
+
+    public function postResetPassword() {
+        // TODO implement update password function for the patient
     }
 
 }

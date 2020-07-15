@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
@@ -54,22 +54,17 @@ class Patient extends Authenticatable
     ];
 
     /**
-     * Perform any actions required before the model boots.
-     *
-     * @return void
+     * @return BelongsToMany
      */
-    protected static function booting()
-    {
-        static::saving(function($patient) {
-            $patient->password = bcrypt($patient->password);
-        });
+    public function doctors() {
+        return $this->belongsToMany(Doctor::class)->withPivot('visit_at')->as('patient_visit');
     }
 
     /**
-     * @return HasOne
+     * @return BelongsToMany
      */
-    public function doctorPatient() {
-        return $this->hasOne(DoctorPatient::class);
+    public function drugs() {
+        return $this->belongsToMany(Drug::class)->withPivot('dose', 'number_of_usage', 'notes')->as('drug_info');
     }
 
 }

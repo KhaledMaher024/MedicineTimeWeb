@@ -1,19 +1,21 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Doctor extends Model
+class User extends Authenticatable
 {
+    use Notifiable;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'doctors';
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -48,7 +50,7 @@ class Doctor extends Model
     protected static function booting()
     {
         static::saving(function($patient) {
-            $patient->password = bcrypt($patient->password);
+            $patient->password = \bcrypt($patient->password);
         });
     }
 

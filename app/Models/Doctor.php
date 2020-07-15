@@ -1,21 +1,19 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable
+class Doctor extends Model
 {
-    use Notifiable;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'doctors';
 
     /**
      * The attributes that are mass assignable.
@@ -32,7 +30,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password', 'remember_token'
     ];
 
     /**
@@ -42,29 +40,17 @@ class User extends Authenticatable
      */
     protected $casts = [];
 
-    /**
-     * Perform any actions required before the model boots.
-     *
-     * @return void
-     */
-    protected static function booting()
-    {
-        static::saving(function($patient) {
-            $patient->password = \bcrypt($patient->password);
-        });
-    }
-
     public function clinic()
     {
         return $this->belongsTo(Clinic::class);
     }
 
     /**
-     * @return HasMany
+     * @return BelongsToMany
      */
     public function patients()
     {
-        return $this->hasMany(DoctorPatient::class);
+        return $this->belongsToMany(Patient::class);
     }
 
 }

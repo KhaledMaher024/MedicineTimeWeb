@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Http\Request;
-use App\User;
-use App\Http\Requests\UserRequest;
 
 class ApiController extends BaseController {
 

@@ -16,11 +16,14 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['auth:api
     /**
      * after auth routes
      */
-    Route::get('/patient', 'PatientsController@getPatientInfo');
-    Route::post('/patient/update', 'PatientsController@updatePatientInfo');
-    Route::get('/patient/doctor', 'PatientsController@getDoctorInfo');
-    Route::get('/patient/clinic', 'PatientsController@getClinicInfo');
-    Route::get('/patient/reviews', 'PatientVisitsController@getReviewTime');
+    Route::get('/patient/info', 'PatientsController@getPatientInfo');
+    Route::get('/patient/doctors', 'DoctorsController@getDoctors');
+    Route::get('/patient/doctors/{doctor_id}', 'DoctorsController@getDoctorInfo');
+    Route::get('/patient/drug/doses', 'PatientsController@getDrugsDose');
+
+    Route::post('/patient/update/password', 'PatientsController@updatePatientPassword');
+    Route::post('/patient/update/info', 'PatientsController@updatePatientInfo');
+    Route::get('/patient/logout', 'PatientsController@getLogout');
 
 });
 
@@ -31,6 +34,10 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['cors', '
      */
     Route::post('/patient/register', 'AuthController@postRegister');
     Route::post('/patient/login', 'AuthController@postLogin');
-    Route::get('/patient/logout', 'AuthController@getLogout');
+    /**
+     * Khaled awwad
+     */
+    Route::post('/patient/forgot-password', 'AuthController@postForgotPassword');
+    Route::post('/patient/reset-password', 'AuthController@postResetPassword');
 
 });

@@ -1,18 +1,17 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Clinic extends Model
+class PatientVisit extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'clinics';
+    protected $table = 'patient_visits';
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +19,7 @@ class Clinic extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'address', 'phone',
+        'doctor_id', 'patient_id', 'visit_at', 'next_visit_at',
     ];
 
     /**
@@ -37,10 +36,7 @@ class Clinic extends Model
      */
     protected $casts = [];
 
-    /**
-     * @return HasMany
-     */
     public function doctors() {
-        return $this->hasMany(Doctor::class);
+        return $this->belongsToMany(Doctor::class)->withPivot('dose', 'number_of_usage', 'notes')->as('drug_dose');
     }
 }

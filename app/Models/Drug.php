@@ -1,17 +1,18 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class PatientVisit extends Model
+class Drug extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'patient_visits';
+    protected $table = 'drugs';
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +20,7 @@ class PatientVisit extends Model
      * @var array
      */
     protected $fillable = [
-        'doctor_id', 'patient_id', 'visit_at', 'next_visit_at',
+        'name', 'image',
     ];
 
     /**
@@ -36,7 +37,10 @@ class PatientVisit extends Model
      */
     protected $casts = [];
 
-    public function doctors() {
-        return $this->hasMany(Doctor::class);
+    /**
+     * @return BelongsToMany
+     */
+    public function patients() {
+        return $this->belongsToMany(Patient::class);
     }
 }
