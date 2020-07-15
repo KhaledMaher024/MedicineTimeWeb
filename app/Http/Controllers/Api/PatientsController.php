@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\JsonResponse;
 
 use App\Http\Requests\Patient\UpdatePatientRequest;
+use Illuminate\Routing\Controller as BaseController;
+
 use App\Patient;
+use App\Drug;
+use App\PatientDrug;
+
 
 class PatientsController extends ApiController {
 
@@ -62,4 +67,36 @@ class PatientsController extends ApiController {
         else return $this->response('Data not found', 404);
     }
 
+    /**
+     * @return JsonResponse
+     */
+    public function getDrugsList() {
+        $patientId = 1;
+        $patientDrug = PatientDrug::find($patientId);
+        $drugId = $patientDrug->drug_id;
+        return PatientDrug::addSelect(['dose','number_of_usage' , 'notes' => Drug::select('name','image')
+        ->whereColumn($patientDrug, 'Drug.id')
+        ->limit(0)
+        ])->get();
+    }
+
+    
+    /**
+     * @return JsonResponse
+     */
+    public function getDrugsHistory() {
+        /*here i want to fetch / bring the name and image from durgs table. 
+        the dose , number_of_usage and notes from drug_patient table.
+        used_at attribute from patient_drug_dose_histories table.
+        but i couldnt do it   
+        */
+        $patientId = 1;
+        $patientDrug = PatientDrugTime::find($patientId);
+        $drugId = $patientDrug->drug_id;
+        return PatientDrugTime::addSelect(['used_at' => Drug::select('name','image')
+        ->whereColumn($patientDrug, 'Drug.id')
+        ->limit(0)])->get();
+    }
+
 }
+    

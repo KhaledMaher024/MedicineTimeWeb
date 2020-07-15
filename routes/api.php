@@ -22,6 +22,10 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['auth:api
     Route::get('/patient/clinic', 'PatientsController@getClinicInfo');
     Route::get('/patient/reviews', 'PatientVisitsController@getReviewTime');
 
+    //*here*//
+    Route::get('/patient/drugs', 'PatientController@getDrugsList');
+    Route::get('/patient/drugsTime', 'PatientController@getDrugsHistory');
+
 });
 
 Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['cors', 'json.response']], function () {

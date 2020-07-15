@@ -72,4 +72,13 @@ class Patient extends Authenticatable
         return $this->hasOne(DoctorPatient::class);
     }
 
+    public function patient_Drug() {
+        return $this->belongsTo(PatientDrug::class);
+    }
+
+    public function patient_drug_history() {
+        return $this->belongsTo(PatientDrugTime::class);
+    }
+    
+
 }
