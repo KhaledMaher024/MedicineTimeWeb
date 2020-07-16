@@ -29,6 +29,9 @@ Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['auth:api
     Route::get('/patient/drugs', 'PatientController@getDrugsList');
     Route::get('/patient/drugsTime', 'PatientController@getDrugsHistory');
 
+    Route::post('/password/email', 'Api\ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/password/reset', 'Api\ResetPasswordController@reset');
+
 });
 
 Route::group(['namespace' => 'Api', 'prefix' => 'v1', 'middleware' => ['cors', 'json.response']], function () {

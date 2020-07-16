@@ -28,7 +28,7 @@ class PatientDrug extends Model
      * @var array
      */
     protected $fillable = [
-        'patient_id', 'drug_id','doze','number_of_usage','notes',
+        'patient_id', 'drug_id','doze','number_of_usage','notes','used_at',
     ];
 
     /**
@@ -44,15 +44,16 @@ class PatientDrug extends Model
      * @var array
      */
     protected $casts = [
-    'created_at' => 'date:Y-m-d H:i:s',
-    'updated_at' => 'date:Y-m-d H:i:s',
-];
+        'created_at' => 'date:Y-m-d H:i:s',
+        'used_at' => 'date:Y-m-d H:i:s',
+        'updated_at' => 'date:Y-m-d H:i:s',
+    ];
 
     public function drugs() {
-        return $this->hasMany(Drug::class);   
+        return $this->hasMany(Drug::class);
     }
-    
+
     public function patients() {
-        return $this->hasMany(Patient::class);   
-    }    
+        return $this->hasMany(Patient::class);
+    }
 }

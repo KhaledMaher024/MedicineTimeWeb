@@ -67,4 +67,9 @@ class User extends Authenticatable
         return $this->hasMany(DoctorPatient::class);
     }
 
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordResetNotification($token));
+    }
+
 }

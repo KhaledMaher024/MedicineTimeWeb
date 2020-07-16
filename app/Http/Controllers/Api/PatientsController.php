@@ -41,6 +41,7 @@ class PatientsController extends ApiController
     public function getDrugsDose()
     {
         // TODO implement drug dose list for the patient
+
     }
 
     /**
@@ -63,15 +64,6 @@ class PatientsController extends ApiController
     public function updatePatientPassword(ChangePasswordRequest $request)
     {
         // TODO implement this function to update the password for the patient
-    }
-
-    public function postForgotPassword() {
-        // TODO implement this function to sent an email with a new password
-
-    }
-
-    public function postResetPassword() {
-        // TODO implement update password function for the patient
     }
 
 }
