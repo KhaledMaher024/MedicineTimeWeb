@@ -64,6 +64,21 @@ class PatientsController extends ApiController
     public function updatePatientPassword(ChangePasswordRequest $request)
     {
         // TODO implement this function to update the password for the patient
+
+        $data = $request->validated();
+        $pass = $request->input('password');
+        $pass_confirmation = $request->input('password_confirmation');
+        if ($pass == $pass_confirmation){
+            return $this->response('password dosent match with confirmation', 400);
+        }else{
+            $patient = auth()->guard('api')->user();
+            if (!$patient) return $this->response('Data not found', 404);
+            $patientPassStatus = $patient->toQuery()->update([
+                'password'=> $pass ,
+            ]);
+            if ($patientPassStatus) return $this->response('Patient info updated', 200);
+            else return $this->response('Something went wrong', 400);
+        }
     }
 
 }
